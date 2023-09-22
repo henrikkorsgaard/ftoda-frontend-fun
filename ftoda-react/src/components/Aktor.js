@@ -1,9 +1,10 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
+import Head from "./Head"
 
 const Q = gql`
 {
-  aktor(type:"Person"){id, navn, titel, parti}
+  aktor(type:"Person", limit:1000){id, navn, titel, parti}
 }
 `;
 
@@ -12,15 +13,17 @@ const Q = gql`
 // 0. Make a stats pages
 // 1. A tabel with columns
 // 2. Searchable (similar to grammar)
+// 3. Seneste aktiviteter over folketingets medlemmer
 
 
 function AktorList(){
     const { data, loading, error } = useQuery(Q);
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
-
+    console.log(data.aktor.length)
     return (
       <div>
+        <Head />
         <h1>Medlemmer af Folketinget</h1>
         <ul>
           {data.aktor.map((a) => (
@@ -56,7 +59,7 @@ function AktorPage(){
     
     return (
         <div>
-        <h2><a href="/">Tilbage til oversigten</a></h2>
+            <Head />
             <div>
                 <h1>{aktor.navn}</h1>
                 <h4>{aktor.titel}</h4>
